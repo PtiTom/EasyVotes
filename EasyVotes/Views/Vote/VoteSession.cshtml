@@ -1,0 +1,29 @@
+﻿@model EasyVotes.Models.SessionVote
+@{
+	ViewData["Title"] = "Session de Vote";
+}
+
+<h1>Session de vote en cours : @Html.ValueFor(s => s.NomSessionVote)</h1>
+
+<h2>Détails de cette session</h2>
+<p>Session de vote créée par @Html.ValueFor(s => s.InitiateurSession)</p>
+<p>@Html.LabelFor(s => s.NombreQuestions) @Html.ValueFor(s => s.NombreQuestions)</p>
+
+<h2>Questions disponibles</h2>
+@foreach (var question in Model.Questions)
+{
+	<div class="row">
+		<span class="col-3">@question.IntituleVote</span>
+		<span class="col-9">
+			@{
+				string status = question.Anonyme ? "Vote anonyme - " : "Vote ";
+				status += question.VoteOuvert ? "ouvert " : "fermé ";
+				int suffrages = question.SuffragesExprimes.Count();
+				status += string.Format("{0} suffrage{1} exprimé{1}.", suffrages, suffrages > 1 ? "s" : string.Empty);
+
+				status += question.SuffragesExprimes.Any(se => se.LoginInscrit == User.Identity.Name) ? " Vous avez voté." : " Vous n'avez pas encore voté.";
+			}
+			@status
+		</span>
+	</div>
+}

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<EasyVotes.Models.SessionVote>
+@{
+	ViewData["Title"] = "Liste des Sessions";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Bonjour @User.Identity.Name</h1>
+	<p>Vous pouvez prendre part aux sessions de vote suivantes :</p>
+	<table class="table table-dark">
+		<thead>
+			<tr>
+				<th scope="col">Sélectionner cette session</th>
+				<th scope="col">Session</th>
+				<th scope="col">Détails</th>
+			</tr>
+		</thead>
+		@foreach (var session in Model)
+		{
+			string voteLabel = session.NombreQuestions > 1 ? "votes" : "vote";
+			<tr>
+				<td>@Html.ActionLink("☑", "VoteSession", "Vote", new { session.IdSessionVote })</td>
+				<td>@session.NomSessionVote</td>
+				<td>par @session.InitiateurSession.Length (@session.NombreQuestions @voteLabel)</td>
+			</tr>
+		}
+	</table>
+</div>

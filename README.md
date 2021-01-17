@@ -13,3 +13,7 @@ Le site EasyVotes permet de déployer rapidement un applicatif permettant de gé
 ## Plateforme technique
 
 .NET Core + base de données intégrée. L'objectif est d'être le plus léger possible.
+
+## TODO List
+
+Connecter l'envoi des mails : https://docs.microsoft.com/fr-fr/aspnet/core/security/authentication/accconfirm?view=aspnetcore-5.0&tabs=visual-studio

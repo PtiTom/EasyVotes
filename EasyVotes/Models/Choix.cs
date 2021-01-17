@@ -11,6 +11,6 @@ namespace EasyVotes.Models
 
 		public int Ordre { get; set; }
 
-		public Vote Vote { get; set; }
+		//public Vote Vote { get; set; }
 	}
 }

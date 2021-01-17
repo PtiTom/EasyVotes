@@ -12,7 +12,9 @@ namespace EasyVotes.Models
 		public int IdGroupeReponses { get; set; }
 		public string CodeReponse { get; set; }
 
-		public Vote Vote { get; set; }
-		public Choix Choix { get; set; }
+		//public Vote Vote { get; set; }
+		//public Choix Choix { get; set; }
+
+		public int IdChoix { get; set; }
 	}
 }

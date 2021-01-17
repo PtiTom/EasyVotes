@@ -1,0 +1,21 @@
+﻿@model EasyVotes.Models.Vote
+@{
+	ViewData["Title"] = "Voter - " + Model.IntituleVote;
+}
+
+<h1>Session de vote en cours : @Html.ValueFor(s => s.IntituleVote)</h1>
+
+<h2>Sélectionnez votre réponse et validez votre réponse</h2>
+@foreach (var item in Model.ReponsesPossibles.OrderBy(r => r.Ordre))
+{
+	<div class="row">
+		<span class="col-12 m-2">
+			<button type="button" class="col-12 btn btn-light btn-item" onclick="document.getElementById('btnChoice').value = @item.IdChoix;$('.btn-item').removeClass('btn-primary').addClass('btn-light'); $(this).removeClass('btn-light').addClass('btn-primary');">@item.IntituleChoix</button>
+		</span>
+	</div>
+}
+<form method="post" enctype="multipart/form-data" asp-controller="Vote" asp-action="Vote">
+	<input type="hidden" id="IdVote" name="IdVote" value="@Model.IdVote" />
+	<input type="hidden" id="btnChoice" name="IdChoix" />
+	<input type="submit" class="btn btn-success" />
+</form>

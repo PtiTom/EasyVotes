@@ -18,8 +18,8 @@ namespace EasyVotes.Models
 		
 		public string InitiateurSession { get; set; }
 
-		public List<Vote> Questions { get; set; }
+		public IEnumerable<Vote> Questions { get; set; }
 
-		public int NombreQuestions => Questions?.Count() ?? 0;
+		public int NombreQuestions { get; set; }
 	}
 }

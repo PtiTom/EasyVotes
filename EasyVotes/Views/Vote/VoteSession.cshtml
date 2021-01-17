@@ -12,18 +12,49 @@
 <h2>Questions disponibles</h2>
 @foreach (var question in Model.Questions)
 {
-	<div class="row">
-		<span class="col-3">@question.IntituleVote</span>
-		<span class="col-9">
-			@{
-				string status = question.Anonyme ? "Vote anonyme - " : "Vote ";
-				status += question.VoteOuvert ? "ouvert " : "fermé ";
-				int suffrages = question.SuffragesExprimes.Count();
-				status += string.Format("{0} suffrage{1} exprimé{1}.", suffrages, suffrages > 1 ? "s" : string.Empty);
+<div class="row">
+	@*<span class="col-3">@question.IntituleVote</span>
+	<span class="col-9">
+		@{
+			string status = question.Anonyme ? "Vote anonyme - " : "Vote ";
+			status += question.VoteOuvert ? "ouvert " : "fermé ";
+			int suffrages = question.SuffragesExprimes.Count();
+			status += string.Format("{0} suffrage{1} exprimé{1}.", suffrages, suffrages > 1 ? "s" : string.Empty);
 
-				status += question.SuffragesExprimes.Any(se => se.LoginInscrit == User.Identity.Name) ? " Vous avez voté." : " Vous n'avez pas encore voté.";
+			status += question.SuffragesExprimes.Any(se => se.LoginInscrit == User.Identity.Name) ? " Vous avez voté." : " Vous n'avez pas encore voté.";
+		}
+		@status
+	</span>*@
+	@{string annotation = (question.Anonyme ? " (Vote Anonyme)" : string.Empty) + string.Format(" - {0} suffrage{1} exprimé{1}.", question.SuffragesExprimes.Count(), question.SuffragesExprimes.Count() > 1 ? "s" : string.Empty);}
+	<span class="col-9">@question.IntituleVote@annotation</span>
+	<span class="col-3">
+		@{
+			string buttonText, buttonClass;
+
+			if (question.SuffragesExprimes.Any(se => se.LoginInscrit == User.Identity.Name))
+			{
+				buttonText = "Vous avez déjà voté";
+				buttonClass = "btn-warning";
 			}
-			@status
-		</span>
-	</div>
+			else if (question.VoteOuvert)
+			{
+				buttonText = "Voter";
+				buttonClass = "btn-success";
+			}
+			else
+			{
+				buttonText = "Vote clos";
+				buttonClass = "btn-Light";
+			}
+		}
+		@if (buttonClass == "btn-success")
+		{
+			@Html.ActionLink(buttonText, "Vote", "Vote", new { IdVote = question.IdVote }, new { @class = "btn btn-success" })
+		}
+		else
+		{
+			<button type="button" class="btn @buttonClass">@buttonText</button>
+		}
+	</span>
+</div>
 }

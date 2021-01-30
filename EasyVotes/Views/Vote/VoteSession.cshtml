@@ -13,33 +13,24 @@
 @foreach (var question in Model.Questions)
 {
 <div class="row">
-	@*<span class="col-3">@question.IntituleVote</span>
-	<span class="col-9">
-		@{
-			string status = question.Anonyme ? "Vote anonyme - " : "Vote ";
-			status += question.VoteOuvert ? "ouvert " : "fermé ";
-			int suffrages = question.SuffragesExprimes.Count();
-			status += string.Format("{0} suffrage{1} exprimé{1}.", suffrages, suffrages > 1 ? "s" : string.Empty);
-
-			status += question.SuffragesExprimes.Any(se => se.LoginInscrit == User.Identity.Name) ? " Vous avez voté." : " Vous n'avez pas encore voté.";
-		}
-		@status
-	</span>*@
-	@{string annotation = (question.Anonyme ? " (Vote Anonyme)" : string.Empty) + string.Format(" - {0} suffrage{1} exprimé{1}.", question.SuffragesExprimes.Count(), question.SuffragesExprimes.Count() > 1 ? "s" : string.Empty);}
-	<span class="col-9">@question.IntituleVote@annotation</span>
-	<span class="col-3">
+	@{string annotation = (question.Anonyme ? " (Vote Anonyme)" : string.Empty) + string.Format(" - {0} suffrage{1} exprimé{1}.", question.VotesEffectués.Count(), question.VotesEffectués.Count() > 1 ? "s" : string.Empty);}
+	<span class="col-6">@question.IntituleVote@annotation</span>
+	<span class="col-6">
 		@{
 			string buttonText, buttonClass;
+			bool canVote = false;
 
-			if (question.SuffragesExprimes.Any(se => se.LoginInscrit == User.Identity.Name))
+			if (question.VotesEffectués.Any(se => se.LoginInscrit == User.Identity.Name))
 			{
 				buttonText = "Vous avez déjà voté";
 				buttonClass = "btn-warning";
+				canVote = question.VoteOuvert && !question.Anonyme;
 			}
 			else if (question.VoteOuvert)
 			{
 				buttonText = "Voter";
 				buttonClass = "btn-success";
+				canVote = true;
 			}
 			else
 			{
@@ -47,13 +38,30 @@
 				buttonClass = "btn-Light";
 			}
 		}
-		@if (buttonClass == "btn-success")
+		@if (canVote)
 		{
-			@Html.ActionLink(buttonText, "Vote", "Vote", new { IdVote = question.IdVote }, new { @class = "btn btn-success" })
+			@Html.ActionLink(buttonText, "Vote", "Vote", new { IdVote = question.IdVote }, new { @class = "btn " + buttonClass })
 		}
 		else
 		{
 			<button type="button" class="btn @buttonClass">@buttonText</button>
+		}
+
+		@if (User.Identity.Name == Model.InitiateurSession)
+		{
+			if (question.VoteOuvert)
+			{
+				@Html.ActionLink("Clore le vote", "Close", "Vote", new { IdVote = question.IdVote }, new { @class = "btn btn-primary" })
+			}
+			else
+			{
+				@Html.ActionLink("Ouvrir le vote", "Open", "Vote", new { IdVote = question.IdVote }, new { @class = "btn btn-primary" })
+			}
+		}
+
+		@if (!question.VoteOuvert && question.VotesEffectués.Any())
+		{
+			@Html.ActionLink("Voir les résultats", "Resultats", "Vote", new { IdVote = question.IdVote }, new { @class = "btn btn-primary" })
 		}
 	</span>
 </div>

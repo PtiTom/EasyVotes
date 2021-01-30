@@ -8,14 +8,14 @@
 <h2>Sélectionnez votre réponse et validez votre réponse</h2>
 @foreach (var item in Model.ReponsesPossibles.OrderBy(r => r.Ordre))
 {
-	<div class="row">
+	<div class="row m-2">
 		<span class="col-12 m-2">
-			<button type="button" class="col-12 btn btn-light btn-item" onclick="document.getElementById('btnChoice').value = @item.IdChoix;$('.btn-item').removeClass('btn-primary').addClass('btn-light'); $(this).removeClass('btn-light').addClass('btn-primary');">@item.IntituleChoix</button>
+			<button type="button" class="col-12 btn @(Model.DejaExprime?.IdChoix == item.IdChoix ? "btn-primary" : "btn-light") btn-item" onclick="document.getElementById('btnChoice').value = @item.IdChoix;$('.btn-item').removeClass('btn-primary').addClass('btn-light'); $(this).removeClass('btn-light').addClass('btn-primary');">@item.IntituleChoix</button>
 		</span>
 	</div>
 }
 <form method="post" enctype="multipart/form-data" asp-controller="Vote" asp-action="Vote">
 	<input type="hidden" id="IdVote" name="IdVote" value="@Model.IdVote" />
-	<input type="hidden" id="btnChoice" name="IdChoix" />
+	<input type="hidden" id="btnChoice" name="IdChoix" value="@Model.DejaExprime?.IdChoix" />
 	<input type="submit" class="btn btn-success" />
 </form>

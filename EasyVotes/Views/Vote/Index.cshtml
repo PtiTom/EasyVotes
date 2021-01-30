@@ -20,7 +20,7 @@
 			<tr>
 				<td>@Html.ActionLink("☑", "VoteSession", "Vote", new { session.IdSessionVote })</td>
 				<td>@session.NomSessionVote</td>
-				<td>par @session.InitiateurSession.Length (@session.NombreQuestions @voteLabel)</td>
+				<td>par @session.InitiateurSession (@session.NombreQuestions @voteLabel)</td>
 			</tr>
 		}
 	</table>

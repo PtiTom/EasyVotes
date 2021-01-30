@@ -1,0 +1,20 @@
+﻿@model EasyVotes.Models.Vote
+@{
+	ViewData["Title"] = "Résultats - " + Model.IntituleVote;
+}
+
+<h1>Résultats du vote : @Html.ValueFor(s => s.IntituleVote)</h1>
+
+@foreach (var item in Model.ReponsesPossibles.OrderByDescending(r => Model.Resultats.Count(rep => rep.IdChoix == r.IdChoix)).ThenBy(r => r.Ordre))
+{
+<div class="row m-2">
+	<span class="col-4 m-2">
+		@item.IntituleChoix
+	</span>
+	<span class="col-3 m-2">
+		@Model.Resultats.Count(r => r.IdChoix == item.IdChoix) vote(s).
+	</span>
+</div>
+}
+
+@Html.ActionLink("Retour", "VoteSession", "Vote", new { IdSessionVote = Model.IdSessionVote }, new { @class = "btn btn-primary" })

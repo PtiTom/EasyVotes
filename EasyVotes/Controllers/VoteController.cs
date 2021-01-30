@@ -48,7 +48,7 @@ namespace EasyVotes.Controllers
 		[Authorize]
 		public async Task<IActionResult> Vote(int IdVote)
 		{
-			Vote voteDetails = await this.ctx.GetVote(IdVote);
+			Vote voteDetails = await this.ctx.GetVote(IdVote, User.Identity.Name);
 
 			if ((await ctx.GetSessions(User.Identity.Name)).Any(s => s.IdSessionVote == voteDetails.IdSessionVote))
 			{
@@ -69,6 +69,35 @@ namespace EasyVotes.Controllers
 			}
 
 			return this.RedirectToAction("Index", "Vote");
+		}
+
+		[Authorize]
+		public async Task<IActionResult> Open(int IdVote)
+		{
+			int idSession = await this.ctx.OpenVote(IdVote, User.Identity.Name);
+			return this.RedirectToAction("VoteSession", "Vote", new { IdSessionVote = idSession });
+		}
+
+
+		[Authorize]
+		public async Task<IActionResult> Close(int IdVote)
+		{
+			int idSession = await this.ctx.CloseVote(IdVote, User.Identity.Name);
+			return this.RedirectToAction("VoteSession", "Vote", new { IdSessionVote = idSession });
+		}
+
+
+		[Authorize]
+		public async Task<IActionResult> Resultats(int IdVote)
+		{
+			Vote voteDetails = await this.ctx.GetVoteWithResultats(IdVote, User.Identity.Name);
+
+			if ((await ctx.GetSessions(User.Identity.Name)).Any(s => s.IdSessionVote == voteDetails.IdSessionVote))
+			{
+				return View(voteDetails);
+			}
+
+			return View(null);
 		}
 	}
 }

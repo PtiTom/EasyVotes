@@ -18,6 +18,10 @@ namespace EasyVotes.Models
 
 		public IEnumerable<Choix> ReponsesPossibles { get; set; }
 
-		public IEnumerable<AVoté> SuffragesExprimes { get; set; }
+		public IEnumerable<AVoté> VotesEffectués { get; set; }
+
+		public SuffrageExprimé DejaExprime { get; set; }
+		
+		public IEnumerable<SuffrageExprimé> Resultats { get; set; }
 	}
 }

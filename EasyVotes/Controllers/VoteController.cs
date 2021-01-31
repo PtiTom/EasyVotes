@@ -2,9 +2,6 @@
 using EasyVotes.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,7 +47,7 @@ namespace EasyVotes.Controllers
 		{
 			Vote voteDetails = await this.ctx.GetVote(IdVote, User.Identity.Name);
 
-			if ((await ctx.GetSessions(User.Identity.Name)).Any(s => s.IdSessionVote == voteDetails.IdSessionVote))
+			if ((await ctx.GetSession(voteDetails.IdSessionVote)).Inscrits.Any(i => i == User.Identity.Name))
 			{
 				return View(voteDetails);
 			}
@@ -91,10 +88,28 @@ namespace EasyVotes.Controllers
 		public async Task<IActionResult> Resultats(int IdVote)
 		{
 			Vote voteDetails = await this.ctx.GetVoteWithResultats(IdVote, User.Identity.Name);
+			voteDetails.Session = await this.ctx.GetSession(voteDetails.IdSessionVote);
 
 			if ((await ctx.GetSessions(User.Identity.Name)).Any(s => s.IdSessionVote == voteDetails.IdSessionVote))
 			{
 				return View(voteDetails);
+			}
+
+			return View(null);
+		}
+
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Admin()
+		{
+			return View(await ctx.GetOwnedSessions(User.Identity.Name));
+		}
+
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> AdminSession(int? IdSessionVote = null)
+		{
+			if ((await ctx.GetOwnedSessions(User.Identity.Name)).Any(s => s.IdSessionVote == IdSessionVote))
+			{
+				return View(await this.ctx.GetSession(IdSessionVote.Value));
 			}
 
 			return View(null);

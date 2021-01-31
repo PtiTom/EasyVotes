@@ -1,18 +1,38 @@
 ﻿@model EasyVotes.Models.Vote
 @{
 	ViewData["Title"] = "Résultats - " + Model.IntituleVote;
+	int inscrits = Math.Max(Model.Session?.Inscrits?.Count() ?? 0, 1);
+	int exprimés = Math.Max(Model.Resultats.Count(), 1);		// Au moins un inscrit / exprimé pour les calculs.
 }
 
 <h1>Résultats du vote : @Html.ValueFor(s => s.IntituleVote)</h1>
 
+<div class="row m-2 card-header">
+	<span class="col-5 m-2">
+		Inscrits : @inscrits. Exprimés : @exprimés (@string.Format("{0:p2} des inscrits", exprimés / inscrits)).
+	</span>
+	<span class="col-2 m-2">
+		% des exprimés.
+	</span>
+	<span class="col-2 m-2">
+		% des inscrits.
+	</span>
+</div>
+
 @foreach (var item in Model.ReponsesPossibles.OrderByDescending(r => Model.Resultats.Count(rep => rep.IdChoix == r.IdChoix)).ThenBy(r => r.Ordre))
 {
 <div class="row m-2">
-	<span class="col-4 m-2">
+	<span class="col-3 m-2">
 		@item.IntituleChoix
 	</span>
-	<span class="col-3 m-2">
+	<span class="col-2 m-2">
 		@Model.Resultats.Count(r => r.IdChoix == item.IdChoix) vote(s).
+	</span>
+	<span class="col-2 m-2">
+		@string.Format("{0:p2}", @Model.Resultats.Count(r => r.IdChoix == item.IdChoix) / exprimés)
+	</span>
+	<span class="col-2 m-2">
+		@string.Format("{0:p2}", @Model.Resultats.Count(r => r.IdChoix == item.IdChoix) / inscrits)
 	</span>
 </div>
 }

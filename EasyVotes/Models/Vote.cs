@@ -10,7 +10,7 @@ namespace EasyVotes.Models
 		
 		public int IdSessionVote { get; set; }
 		
-		//public SessionVote Session { get; set; }
+		public SessionVote Session { get; set; }
 
 		public string IntituleVote { get; set; }
 		public bool Anonyme { get; set; }

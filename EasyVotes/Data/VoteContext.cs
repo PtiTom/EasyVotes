@@ -54,12 +54,14 @@ namespace EasyVotes.Data
 		public async Task<SessionVote> GetSession(int sessionId)
 		{
 			string sessionQuery = "SELECT IdSessionVote, NomSessionVote, DebutSession, FinSession, InitiateurSession, (SELECT COUNT(*) FROM Vote.Vote V WHERE V.IdSessionVote = S.IdSessionVote) AS NombreQuestions FROM Vote.SessionVote S WHERE IdSessionVote = @IdSession";
+			string inscritsQuery = "SELECT DISTINCT LoginInscrit FROM Vote.Inscrit I WHERE I.IdSessionVote = @IdSession";
 			SessionVote returnedEntity;
 
 			using (SqlConnection c = new SqlConnection(this.easyVoteConnectionString))
 			{
 				c.Open();
 				returnedEntity = await c.QueryFirstAsync<SessionVote>(sessionQuery, new { IdSession = sessionId });
+				returnedEntity.Inscrits = await c.QueryAsync<string>(inscritsQuery, new { IdSession = sessionId });
 				returnedEntity.Questions = await this.GetVotes(sessionId);
 			}
 
@@ -189,6 +191,18 @@ namespace EasyVotes.Data
 			// TODO : Logguer car tentative de fraude.
 
 			return currentVote.IdSessionVote;
+		}
+
+		public async Task<IEnumerable<SessionVote>> GetOwnedSessions(string userLogin)
+		{
+			string query = "SELECT IdSessionVote, NomSessionVote, DebutSession, FinSession, InitiateurSession, (SELECT COUNT(*) FROM Vote.Vote V WHERE V.IdSessionVote = S.IdSessionVote) AS NombreQuestions FROM Vote.SessionVote S WHERE InitiateurSession = @UserLogin";
+
+
+			using (SqlConnection c = new SqlConnection(this.easyVoteConnectionString))
+			{
+				c.Open();
+				return await c.QueryAsync<SessionVote>(query, new { UserLogin = userLogin });
+			}
 		}
 	}
 }

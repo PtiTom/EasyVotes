@@ -19,7 +19,10 @@ namespace EasyVotes.Models
 		public string InitiateurSession { get; set; }
 
 		public IEnumerable<Vote> Questions { get; set; }
-
+		
+		[Display(Name="Nombre de questions")]
 		public int NombreQuestions { get; set; }
+
+		public IEnumerable<string> Inscrits { get; set; }
 	}
 }

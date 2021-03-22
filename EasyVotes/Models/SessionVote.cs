@@ -12,6 +12,7 @@ namespace EasyVotes.Models
 
 		public string NomSessionVote { get; set; }
 
+		//[DataType(DataType.Date)] // (En fait, on veut bien de l'heure :) )
 		public DateTime DebutSession { get; set; }
 
 		public DateTime FinSession { get; set; }

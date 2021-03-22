@@ -68,6 +68,15 @@ namespace EasyVotes.Data
 			return returnedEntity;
 		}
 
+		public SessionVote NewSession()
+		{
+			return new SessionVote
+			{
+				Inscrits = System.Array.Empty<string>(),
+				Questions = System.Array.Empty<Vote>()
+			};
+		}
+
 		public async Task<IEnumerable<Vote>> GetVotes(int sessionId)
 		{
 			string votesQuery = "SELECT IdVote, IntituleVote, Anonyme, VoteOuvert FROM Vote.Vote V WHERE V.IdSessionVote = @IdSession";

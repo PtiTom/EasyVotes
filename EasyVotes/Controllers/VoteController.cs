@@ -107,12 +107,22 @@ namespace EasyVotes.Controllers
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> AdminSession(int? IdSessionVote = null)
 		{
-			if ((await ctx.GetOwnedSessions(User.Identity.Name)).Any(s => s.IdSessionVote == IdSessionVote))
+			if (IdSessionVote != null && (await ctx.GetOwnedSessions(User.Identity.Name)).Any(s => s.IdSessionVote == IdSessionVote))
 			{
 				return View(await this.ctx.GetSession(IdSessionVote.Value));
 			}
-
-			return View(null);
+			else
+			{
+				return View(this.ctx.NewSession());
+			}
 		}
+
+		[Authorize(Roles = "Admin"), HttpPost]
+		public async Task<IActionResult> AdminSession(SessionVote session)
+		{
+			System.Diagnostics.Debugger.Break();
+			return this.RedirectToAction("Admin", "Vote");
+		}
+
 	}
 }

@@ -1,13 +1,15 @@
 ﻿@model EasyVotes.Models.SessionVote
 @{
-	ViewData["Title"] = "Session de Vote";
+	ViewData["Title"] = "Admin - Session de Vote";
 }
 
-<h1>Session de vote en cours : @Html.ValueFor(s => s.NomSessionVote)</h1>
+<h1>Modifier une session de vote</h1>
 
 <h2>Détails de cette session</h2>
-<p>Session de vote créée par @Html.ValueFor(s => s.InitiateurSession)</p>
-<p>@Html.LabelFor(s => s.NombreQuestions) : @Html.ValueFor(s => s.NombreQuestions)</p>
+<p>@Html.LabelFor(s => s.NomSessionVote) : @Html.EditorFor(s => s.NomSessionVote)</p>
+<p>@Html.LabelFor(s => s.DebutSession) : @Html.EditorFor(s => s.DebutSession)</p>
+<p>@Html.LabelFor(s => s.FinSession) : @Html.EditorFor(s => s.FinSession)</p>
+<p>Session de vote créée par @(string.IsNullOrEmpty(Model.InitiateurSession)? "vous" : Html.ValueFor(s => s.InitiateurSession)).</p>
 
 <h2>Questions disponibles</h2>
 @foreach (var question in Model.Questions)
